@@ -180,7 +180,7 @@ Remove a user from a ticket.
 **When is an email sent?**
 
 - Ticket created — **No**
-- Ticket updated — **No**
+- Ticket updated — **Yes**
 - User assigned to a ticket — **Yes**
 - User removed from a ticket — **No**
 
@@ -198,7 +198,8 @@ No emails are sent for ticket creation, ticket updates, or user removal.
 - Ticket ID
 - Ticket title
 - Ticket description
-- List of assignees and Ticket status
+- List of assignees
+- Ticket status
 
 Example:
 
