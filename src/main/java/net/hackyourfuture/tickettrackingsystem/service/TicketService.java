@@ -45,6 +45,19 @@ public class TicketService {
         Ticket saved = tickets.create(t);
         return toResponse(saved);
     }
+    public List<TicketResponse> getAll() {
+        return tickets.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public TicketResponse getById(Long id) {
+        Ticket t = tickets.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ticket not found"));
+        return toResponse(t);
+    }
+
 
     public TicketResponse update(Long id, TicketRequest req) {
         Ticket t = tickets.findById(id)

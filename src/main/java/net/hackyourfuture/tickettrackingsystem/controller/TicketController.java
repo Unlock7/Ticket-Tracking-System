@@ -5,6 +5,7 @@ import net.hackyourfuture.tickettrackingsystem.dto.ticket.TicketResponse;
 import net.hackyourfuture.tickettrackingsystem.service.TicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tickets")
@@ -20,6 +21,16 @@ public class TicketController {
     public ResponseEntity<TicketResponse> create(@RequestBody TicketRequest req) {
         return ResponseEntity.ok(service.create(req));
     }
+    @GetMapping
+    public ResponseEntity<List<TicketResponse>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TicketResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<TicketResponse> update(
