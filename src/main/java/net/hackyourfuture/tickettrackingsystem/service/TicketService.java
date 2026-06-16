@@ -57,7 +57,7 @@ public class TicketService {
 
         tickets.update(t);
 
-        List<User> assignedUsers = users.findById(assignees.findUserIds(id));
+        List<User> assignedUsers = users.findByIds(assignees.findUserIds(id));
 
         email.sendTicketUpdated(t, assignedUsers);
 
@@ -75,7 +75,7 @@ public class TicketService {
             assignees.assign(ticketId, userId);
         }
 
-        List<User> assignedUsers = users.findById(assignees.findUserIds(ticketId));
+        List<User> assignedUsers = users.findByIds(assignees.findUserIds(ticketId));
 
         email.sendUserAssigned(t, assignedUsers);
     }
