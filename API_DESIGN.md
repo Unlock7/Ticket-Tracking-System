@@ -71,13 +71,13 @@ Retrieve a single user.
 
 Update a user.
 
-| Field             | Description                                  |
-| ----------------- | -------------------------------------------- |
-| **Endpoint**      | /users/{id}                                  |
-| **Method**        | PUT                                          |
-| **Request body**  | `{ "name": "string", "email": "string" }`    |
-| **Response body** | `{ "message": "User Updated" }               |
-| **Validations**   | - name ≥ 3 chars - email valid - user exists |
+| Field             | Description                                              |
+| ----------------- | -------------------------------------------------------- |
+| **Endpoint**      | /users/{id}                                              |
+| **Method**        | PUT                                                      |
+| **Request body**  | `{ "name": "string", "email": "string" }`                |
+| **Response body** | `{ "id": "number", "name": "string", "email": "string"}` |
+| **Validations**   | - name ≥ 3 chars - email valid - user exists             |
 
 ## **DELETE /users/ {id}**
 
@@ -105,13 +105,13 @@ List all projects with ticket counts.
 
 Create a new ticket.
 
-| Field             | Description                                                                                                                          |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Endpoint**      | /tickets                                                                                                                             |
-| **Method**        | POST                                                                                                                                 |
-| **Request body**  | `{ "title": "string", "description": "string", "projectId": number, "status": "open"}`                                               |
-| **Response body** | { "id": number, "title":"string", "description":"string", "projectId": number, "status": "open",<br /><br />createdAt": "timestamp"} |
-| **Validations**   | - Title required, Title  ≥ 3 chars ,  project must exists - status valid                                                             |
+| Field             | Description                                                                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Endpoint**      | /tickets                                                                                                                               |
+| **Method**        | POST                                                                                                                                   |
+| **Request body**  | `{ "title": "string", "description": "string", "projectId": number, "status": "open"}`                                                 |
+| **Response body** | `{ "id": number, "title":"string", "description":"string", "projectId": number, "status": "open",<br /><br />createdAt": "timestamp"}` |
+| **Validations**   | - Title required, Title  ≥ 3 chars ,  project must exists - status valid                                                               |
 
 ## **GET /tickets**
 
@@ -144,13 +144,13 @@ Retrieve a single ticket.
 
 Update ticket fields.
 
-| Field             | Description                                                                             |
-| ----------------- | --------------------------------------------------------------------------------------- |
-| **Endpoint**      | /tickets/{id}                                                                           |
-| **Method**        | PUT                                                                                     |
-| **Request body**  | `{ "title": "string", "description": "string", "status": "type", "projectId": number }` |
-| **Response body** | {**"message": "Ticket update successfully"**}                                           |
-| **Validations**   | - status valid - project exists - ticket exists, email update automatically             |
+| Field             | Description                                                                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Endpoint**      | /tickets/{id}                                                                                                                                  |
+| **Method**        | PUT                                                                                                                                            |
+| **Request body**  | `{ "title": "string", "description": "string", "status": "type", "projectId": number }`                                                        |
+| **Response body** | `{"id":"number", "title": "string", "description":"string", "status" "open, in progress, close", "projectId": "number", "created_at": "time"}` |
+| **Validations**   | - status valid - project exists - ticket exists, email update automatically                                                                    |
 
 ## **POST /tickets/ {ticketId} /assignees/**
 
@@ -192,6 +192,7 @@ No emails are sent for ticket creation, ticket updates, or user removal.
 ### **Who receives it?**
 
 - All assigned users of that ticket
+- when ticket is updated
 
 ### What does the email contain?\*\*
 
