@@ -2,6 +2,7 @@ package net.hackyourfuture.tickettrackingsystem.controller;
 
 import net.hackyourfuture.tickettrackingsystem.dto.ticket.TicketRequest;
 import net.hackyourfuture.tickettrackingsystem.dto.ticket.TicketResponse;
+import net.hackyourfuture.tickettrackingsystem.model.Ticket;
 import net.hackyourfuture.tickettrackingsystem.service.TicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,14 @@ public class TicketController {
     @GetMapping
     public ResponseEntity<List<TicketResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Ticket>> search(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String text
+    ) {
+        return ResponseEntity.ok(service.search(status, text));
     }
 
     @GetMapping("/{id}")

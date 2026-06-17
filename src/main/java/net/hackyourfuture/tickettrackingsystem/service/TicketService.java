@@ -31,7 +31,9 @@ public class TicketService {
         this.users = users;
         this.email = email;
     }
-
+    public List<Ticket> search(String status, String text) {
+        return tickets.search(status, text);
+    }
     public TicketResponse create(TicketRequest req) {
         Ticket t = new Ticket(
                 null,
