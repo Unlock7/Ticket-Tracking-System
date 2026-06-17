@@ -16,6 +16,9 @@ public class TicketTrackingSystemApplication {
 		System.setProperty("DB_URL", dotenv.get("DB_URL"));
 		System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+		System.setProperty("EMAIL_API_KEY", dotenv.get("EMAIL_API_KEY"));
+		System.setProperty("EMAIL_FROM", dotenv.get("EMAIL_FROM"));
+
 
 		SpringApplication.run(TicketTrackingSystemApplication.class, args);
 	}
