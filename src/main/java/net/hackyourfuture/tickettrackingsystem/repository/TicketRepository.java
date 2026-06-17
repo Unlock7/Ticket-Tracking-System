@@ -83,7 +83,7 @@ public class TicketRepository {
     // -----------------------------
     // SEARCH (text + status)
     // -----------------------------
-    public List<Ticket> search(String text, String status) {
+    public List<Ticket> search(String status, String text) {
         StringBuilder sql = new StringBuilder("SELECT * FROM tickets WHERE 1=1 ");
         List<Object> params = new java.util.ArrayList<>();
 
