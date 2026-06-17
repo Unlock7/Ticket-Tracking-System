@@ -1,10 +1,9 @@
 package net.hackyourfuture.tickettrackingsystem.dto.project;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectResponse {
@@ -13,7 +12,8 @@ public class ProjectResponse {
     private String name;
     private TicketsSummary tickets;
 
-    @Data
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TicketsSummary {
