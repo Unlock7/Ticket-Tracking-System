@@ -26,9 +26,18 @@ class ProjectServiceTest {
     @Test
     void getAllProjectsWithTicketCounts_shouldReturnProjects() {
         List<ProjectResponse> projects = List.of(
-                new ProjectResponse(1L, "Project A", 3),
-                new ProjectResponse(2L, "Project B", 5)
+                new ProjectResponse(
+                        1L,
+                        "Project A",
+                        new ProjectResponse.TicketsSummary(3, 0, 0)
+                ),
+                new ProjectResponse(
+                        2L,
+                        "Project B",
+                        new ProjectResponse.TicketsSummary(5, 0, 0)
+                )
         );
+
 
         when(projectRepository.findAllWithTicketCounts())
                 .thenReturn(projects);
@@ -38,7 +47,7 @@ class ProjectServiceTest {
 
         assertEquals(2, result.size());
         assertEquals("Project A", result.getFirst().getName());
-        assertEquals(3, result.getFirst().getTicketCount());
+        assertEquals(3, result.getFirst().getTickets().getOpen());
 
         verify(projectRepository).findAllWithTicketCounts();
     }
