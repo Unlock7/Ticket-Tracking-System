@@ -1,5 +1,5 @@
 <h1 align="center">📌 Ticket Tracking System</h1>
-<h2 align="center">Mid Backend Track Project</h2>
+<h2 align="center">Mid Backend-Track Project</h2>
 <h3 align="center">(HackYourFuture)</h3>
 
 
