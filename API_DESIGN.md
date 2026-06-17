@@ -13,20 +13,20 @@ Below is the ER diagram for the Ticket Tracking System:
 
 # **2. Endpoint Summary**
 
-| Method   | Path                          | Description                      |
-| -------- | ----------------------------- | -------------------------------- |
-| **GET**  | /users                        | List all users                   |
-| GET      | /users/{id}                   | Get user by ID                   |
-| POST     | /users                        | Create a new user                |
-| PUT      | /users/{id}                   | Update a user                    |
-| DELETE   | /users/{id}                   | Delete a user                    |
-| **GET**  | /projects                     | List projects with ticket counts |
-| **POST** | /tickets                      | Create a new ticket              |
-| GET      | /tickets                      | Search tickets                   |
-| GET      | /tickets/{id}                 | Get ticket by ID                 |
-| PUT      | /tickets/{id}                 | Update ticket                    |
-| PUT      | /tickets/{id}/assign/{userId} | Assign user to ticket            |
-| DELETE   | /tickets/{id}/assign/{userId} | Remove user from ticket          |
+| Method   | Path                                   | Description                                                                                    |
+| -------- | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **GET**  | /users                                 | List all users                                                                                 |
+| GET      | /users/{id}                            | Get user by ID                                                                                 |
+| POST     | /users                                 | Create a new user                                                                              |
+| PUT      | /users/{id}                            | Update a user                                                                                  |
+| DELETE   | /users/{id}                            | Delete a user                                                                                  |
+| **GET**  | /projects                              | List projects with ticket counts                                                               |
+| **POST** | /tickets                               | Create a new ticket                                                                            |
+| GET      | /tickets                               | List of matching tickets. Empty`text` → return **all tickets**. Multiple filters use AND logic |
+| GET      | /tickets/{id}                          | Get ticket by ID                                                                               |
+| PUT      | /tickets/{id}                          | Update ticket                                                                                  |
+| POST     | /tickets/{ticketId}/assignees/         | Assign user to ticket                                                                          |
+| DELETE   | /tickets/{ticketId}/assignees/{userId} | Remove user from ticket                                                                        |
 
 # **3. Endpoint description**
 
@@ -65,7 +65,7 @@ Retrieve a single user.
 | **Endpoint**      | /users/{id}                                             |
 | **Method**        | GET                                                     |
 | **Response body** | `{ "id": number, "name": "string", "email": "string" }` |
-| **Validations**   | - user must exist                                       |
+| **Validations**   | - user must exist, valid ID                             |
 
 ## **PUT /users/ {id}**
 
@@ -76,7 +76,7 @@ Update a user.
 | **Endpoint**      | /users/{id}                                  |
 | **Method**        | PUT                                          |
 | **Request body**  | `{ "name": "string", "email": "string" }`    |
-| **Response body** | Updated user                                 |
+| **Response body** | `{ "message": "User Updated" }               |
 | **Validations**   | - name ≥ 3 chars - email valid - user exists |
 
 ## **DELETE /users/ {id}**
@@ -94,28 +94,32 @@ Delete a user.
 
 List all projects with ticket counts.
 
-| Field             | Description                                                                                         |
-| ----------------- | --------------------------------------------------------------------------------------------------- |
-| **Endpoint**      | /projects                                                                                           |
-| **Method**        | GET                                                                                                 |
-| **Response body** | Example:`{ "id": 1, "name": "Website", "tickets": { "open": 10, "in_progress": 5, "closed": 30 } }` |
-| **Validations**   | none                                                                                                |
+| Field             | Description                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| **Endpoint**      | /projects                                                                                         |
+| **Method**        | GET                                                                                               |
+| **Response body** | Example:`{ "id": 1, "name": "Website", "tickets": { "open": 10, "in_progress": 5, "closed": 30 }` |
+| **Validations**   | none                                                                                              |
 
 ## **POST /tickets**
 
 Create a new ticket.
 
-| Field             | Description                                                                                                  |
-| ----------------- | ------------------------------------------------------------------------------------------------------------ |
-| **Endpoint**      | /tickets                                                                                                     |
-| **Method**        | POST                                                                                                         |
-| **Request body**  | `{ "title": "string", "description": "string", "projectId": number, "status": "open", "assignedUsers": [] }` |
-| **Response body** | ticket created with details and generated ID                                                                 |
-| **Validations**   | - title required - project exists - status valid                                                             |
+| Field             | Description                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Endpoint**      | /tickets                                                                                                                             |
+| **Method**        | POST                                                                                                                                 |
+| **Request body**  | `{ "title": "string", "description": "string", "projectId": number, "status": "open"}`                                               |
+| **Response body** | { "id": number, "title":"string", "description":"string", "projectId": number, "status": "open",<br /><br />createdAt": "timestamp"} |
+| **Validations**   | - Title required, Title  ≥ 3 chars ,  project must exists - status valid                                                             |
 
 ## **GET /tickets**
 
 Search tickets.
+
+GET /tickets?status=open&title=Bug&description=server
+
+Use the Query String to search by title, description, or status. No filter returns all.
 
 | Field             | Description                                                                                    |
 | ----------------- | ---------------------------------------------------------------------------------------------- |
@@ -140,44 +144,50 @@ Retrieve a single ticket.
 
 Update ticket fields.
 
-| Field             | Description                                                                      |
-| ----------------- | -------------------------------------------------------------------------------- |
-| **Endpoint**      | /tickets/{id}                                                                    |
-| **Method**        | PUT                                                                              |
-| **Request body**  | `{ "title": "...", "description": "...", "status": "...", "projectId": number }` |
-| **Response body** | Updated ticket                                                                   |
-| **Validations**   | - status valid - project exists - ticket exists                                  |
+| Field             | Description                                                                             |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| **Endpoint**      | /tickets/{id}                                                                           |
+| **Method**        | PUT                                                                                     |
+| **Request body**  | `{ "title": "string", "description": "string", "status": "type", "projectId": number }` |
+| **Response body** | {**"message": "Ticket update successfully"**}                                           |
+| **Validations**   | - status valid - project exists - ticket exists, email update automatically             |
 
-## **PUT /tickets/ {id} /assign/ {userId}**
+## **POST /tickets/ {ticketId} /assignees/**
 
 Assign a user to a ticket.
 
 | Field             | Description                                               |
 | ----------------- | --------------------------------------------------------- |
-| **Endpoint**      | /tickets/{id}/assign/{userId}                             |
-| **Method**        | PUT                                                       |
-| **Response body** | Updated ticket with assigned users                        |
+| **Endpoint**      | /ticket/{ticketId}/assignees/                             |
+| Method            | POST<br />                                                |
+| **Request body**  | { "userId" : number }                                     |
+| **Response body** | {**"message": "User assigned successfully"**}             |
 | **Validations**   | - ticket exists - user exists - user not already assigned |
 
-## **DELETE /tickets/ {id}/assign/ {userId}**
+## **DELETE /tickets/ {ticketd}/assign/ {userId}**
 
 Remove a user from a ticket.
 
 | Field             | Description                                                   |
 | ----------------- | ------------------------------------------------------------- |
-| **Endpoint**      | /tickets/{id}/assign/{userId}                                 |
+| **Endpoint**      | /tickets/{ticketId}/assignees/{userId}                        |
 | **Method**        | DELETE                                                        |
 | **Response body** | { "message": "User {userId} removed from ticket {ticketId}" } |
 | **Validations**   | - ticket exists - user exists - user must be assigned         |
 
 # **4. Email notifications**
 
-**\*When is an email sent?**
+**When is an email sent?**
 
-- When a ticket is created
-- When a ticket is updated
-- When a user is assigned
-- When a user is removed
+- Ticket created — **No**
+- Ticket updated — **Yes**
+- User assigned to a ticket — **Yes**
+- User removed from a ticket — **No**
+
+**Logic**
+
+Email notifications are only triggered when a new user is assigned to a ticket.
+No emails are sent for ticket creation, ticket updates, or user removal.
 
 ### **Who receives it?**
 
@@ -186,9 +196,10 @@ Remove a user from a ticket.
 ### What does the email contain?\*\*
 
 - Ticket ID
-- Updated fields
-- Current status
+- Ticket title
+- Ticket description
 - List of assignees
+- Ticket status
 
 Example:
 
@@ -205,5 +216,4 @@ Assignees: Max, Dave
 
 - The ticket update still succeeds
 - The failure is logged
-- Error is not shown to the user unless needed
 - Behavior follows **resend.com** API documentation
